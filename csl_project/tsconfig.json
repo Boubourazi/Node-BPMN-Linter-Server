@@ -1,0 +1,15 @@
+{"compileOnSave": true,
+  "compilerOptions": {
+    "watch": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "target": "ESNext",
+    "allowSyntheticDefaultImports" : true,
+    "esModuleInterop": true
+  },
+    "include": ["src/**/*"],
+    "exclude": ["src/types/*.ts", "node_modules", ".vscode"]
+}
