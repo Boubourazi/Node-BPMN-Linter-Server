@@ -3,7 +3,7 @@ import express from 'express';
 import parser from 'fast-xml-parser';
 import validator from "xsd-schema-validator";
 import { promisify } from 'util';
-import { stubArray } from 'lodash';
+import { first, stubArray } from 'lodash';
 const exec = promisify(require('child_process').exec);
 
 
@@ -20,10 +20,25 @@ export class Checker{
         while(s.charAt(0) === ' '){
             s = s.substring(1);
         }
-        let sArray = s.split('\n');
+        let sArray = s.split('\n').map(x => {
+            while(x.charAt(0) === ' '){
+                x = x.substring(1);
+            }
+            return x;
+        });
+
         for(let i = 0; i < sArray.length; i++){
-            console.log(sArray[i]);
-            result.push({name: sArray[i].substring(0, sArray[i].indexOf(' ')), type:"t", desc:""});
+            let firstSpace = sArray[i].indexOf(' ');
+            let secondSpace = sArray[i].indexOf(' ', firstSpace + 1);
+            while(sArray[i].charAt(secondSpace) === ' '){
+                secondSpace++;
+            }
+            let thirdSpace = sArray[i].indexOf(' ', secondSpace + 1);
+            while(sArray[i].charAt(thirdSpace) === ' '){
+                thirdSpace++;
+            }
+            console.log(firstSpace, secondSpace, thirdSpace);
+            result.push({name: sArray[i].substring(0, firstSpace), type:sArray[i].substring(secondSpace, thirdSpace-2), desc:sArray[i].substring(thirdSpace)});
         }
         return result;
     }
