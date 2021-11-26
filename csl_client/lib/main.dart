@@ -32,7 +32,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool pending = false;
-  String text = "Drag here !";
+  List<String> text = ["Drag here !"];
+
   late DropzoneViewController controller;
   static const JsonDecoder parser = JsonDecoder();
 
@@ -70,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                     if (response.statusCode == 200) {
                       setState(() {
-                        text = responseMessage;
+                        text = responseMessage.split("\n");
                       });
                     } else {
                       print(response.reasonPhrase);
@@ -80,7 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             Center(
-              child: pending ? const CircularProgressIndicator() : Text(text),
+              child: pending
+                  ? const CircularProgressIndicator()
+                  : Column(
+                      children: text.map((e) => Text(e)).toList(),
+                    ),
             )
           ],
         ),

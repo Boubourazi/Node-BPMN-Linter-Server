@@ -2,7 +2,6 @@ import { Router } from "express";
 import fileUpload from "express-fileupload";
 import { appendFile } from "fs";
 import path from "path/win32";
-import BPMN_checker from "../logic/BPMN_checker";
 import fs from 'fs';
 
 import {Checker} from "../logic/Checker";
