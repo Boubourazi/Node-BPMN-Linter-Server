@@ -21,10 +21,11 @@ bpmnRouter.post('/checkdiagram', async (req, res) => {
             let checker = new Checker_1.Checker(diagram.data.toString());
             let validation = checker.validateXML();
             let lint = await checker.bpmnlint();
+            console.log("lint : " + lint);
             //send response
             res.send({
                 status: true,
-                message: validation === true ? lint.toString() : validation,
+                message: validation === true ? lint : validation,
                 data: {
                     name: diagram.name,
                     mimetype: diagram.mimetype,

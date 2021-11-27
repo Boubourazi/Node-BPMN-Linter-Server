@@ -14,12 +14,14 @@ export class Checker{
     private objectify(lint:string):any{
         let result:{name:string, type:string, desc:string}[] = [];
         let s = lint;
+
         while(s.charAt(0) === '\n'){
             s = s.substring(1);
         }
         while(s.charAt(0) === ' '){
             s = s.substring(1);
         }
+        
         let sArray = s.split('\n').map(x => {
             while(x.charAt(0) === ' '){
                 x = x.substring(1);
@@ -37,9 +39,9 @@ export class Checker{
             while(sArray[i].charAt(thirdSpace) === ' '){
                 thirdSpace++;
             }
-            console.log(firstSpace, secondSpace, thirdSpace);
             result.push({name: sArray[i].substring(0, firstSpace), type:sArray[i].substring(secondSpace, thirdSpace-2), desc:sArray[i].substring(thirdSpace)});
         }
+        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '');
         return result;
     }
 
@@ -60,13 +62,8 @@ export class Checker{
         }
         catch(e){
             let errorString:string = e.stdout.toString();
-            x = errorString.substring(errorString.indexOf("diagram.bpmn") + 12);
-
+            x = errorString.substring(errorString.indexOf("diagram.bpmn") + "diagram.bpmn".length);
         }
-        finally{
-            console.log("test :");
-            console.table(this.objectify(x))
-        }
-        return x;
+        return this.objectify(x);
     }
 }

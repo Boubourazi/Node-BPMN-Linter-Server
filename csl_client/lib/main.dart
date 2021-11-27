@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool pending = false;
-  List<String> text = ["Drag here !"];
+  List<dynamic> text = ["Drag here !"];
 
   late DropzoneViewController controller;
   static const JsonDecoder parser = JsonDecoder();
@@ -65,13 +65,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     http.StreamedResponse response = await request.send();
                     var responseMessage = await response.stream.bytesToString();
                     var message = parser.convert(responseMessage);
-                    print(message.toString());
+
                     setState(() {
                       pending = false;
                     });
                     if (response.statusCode == 200) {
                       setState(() {
-                        text = responseMessage.split("\n");
+                        text = message['message']
+                            .map<String>((x) => x['name'].toString())
+                            .toList();
                       });
                     } else {
                       print(response.reasonPhrase);
