@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool pending = false;
-  List<dynamic> text = ["Drag here !"];
+  List<Widget> text = [Text("Drag here !")];
 
   late DropzoneViewController controller;
   static const JsonDecoder parser = JsonDecoder();
@@ -72,7 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (response.statusCode == 200) {
                       setState(() {
                         text = message['message']
-                            .map<String>((x) => x['name'].toString())
+                            .map<Row>((x) => Row(children: <Widget>[
+                                  Text(x['name'].toString()),
+                                  VerticalDivider(),
+                                  Text(x['type'].toString()),
+                                  VerticalDivider(),
+                                  Text(x['desc'].toString())
+                                ]))
                             .toList();
                       });
                     } else {
@@ -82,13 +88,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            Center(
-              child: pending
-                  ? const CircularProgressIndicator()
-                  : Column(
-                      children: text.map((e) => Text(e)).toList(),
-                    ),
-            )
+            pending
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: text,
+                  )
           ],
         ),
       ),
