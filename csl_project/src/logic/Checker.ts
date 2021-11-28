@@ -1,14 +1,11 @@
-const fetch:any = require('node-fetch');//Need to use require explicitly
-import express from 'express';
 import parser from 'fast-xml-parser';
-import validator from "xsd-schema-validator";
 import { promisify } from 'util';
-import { first, stubArray } from 'lodash';
 const exec = promisify(require('child_process').exec);
 
 
 export class Checker{
     constructor(private readonly bpmn:string){
+    
     }
 
     private objectify(lint:string):any{
@@ -40,8 +37,10 @@ export class Checker{
                 thirdSpace++;
             }
             result.push({name: sArray[i].substring(0, firstSpace), type:sArray[i].substring(secondSpace, thirdSpace-2), desc:sArray[i].substring(thirdSpace)});
+            
         }
-        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '');
+        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '');//Remove empty lines and last line 
+        result = result.map(x => ({name:x.name, type:x.type, desc:x.desc.substring(0, x.desc.indexOf('   '))}));//Remove the linter parameter label
         return result;
     }
 
@@ -56,7 +55,8 @@ export class Checker{
 
 
     async bpmnlint():Promise<any>{
-        let x = null;
+        let x:string = null;
+        let result = null;
         try{
             x = await exec('node ./node_modules/bpmnlint/bin/bpmnlint.js ./uploads/diagram.bpmn');
         }
@@ -64,6 +64,7 @@ export class Checker{
             let errorString:string = e.stdout.toString();
             x = errorString.substring(errorString.indexOf("diagram.bpmn") + "diagram.bpmn".length);
         }
-        return this.objectify(x);
+        result = x.includes("unparsable content") ? [{name:"XSD Error", type:"error", desc:"The file is not a valid BPMN according to the XSD"}] : this.objectify(x);
+        return result;
     }
 }

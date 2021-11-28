@@ -2,7 +2,7 @@
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1i44qz5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="8.7.2">
   <bpmn:process id="Process_1kb1q0r" isExecutable="false">
     <bpmn:startEvent id="StartEvent_07hoexv">
-      <bpmn:outgoing>Flow_08czl1htomate</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08czl1htomate</bpmn:outgoing>>
     </bpmn:startEvent>
     <bpmn:task id="Activity_19xj494">
       <bpmn:incoming>Flow_08czl1h</bpmn:incoming>

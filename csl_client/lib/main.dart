@@ -72,13 +72,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (response.statusCode == 200) {
                       setState(() {
                         text = message['message']
-                            .map<Row>((x) => Row(children: <Widget>[
-                                  Text(x['name'].toString()),
-                                  VerticalDivider(),
-                                  Text(x['type'].toString()),
-                                  VerticalDivider(),
-                                  Text(x['desc'].toString())
-                                ]))
+                            .map<Row>((x) => Row(
+                                  children: <Widget>[
+                                    Text(x['name'].toString()),
+                                    const VerticalDivider(),
+                                    Text(x['type'].toString()),
+                                    const VerticalDivider(),
+                                    Text(x['desc'].toString())
+                                  ],
+                                ))
                             .toList();
                       });
                     } else {

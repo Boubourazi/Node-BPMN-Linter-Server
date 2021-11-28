@@ -1,9 +1,4 @@
 import { Router } from "express";
-import fileUpload from "express-fileupload";
-import { appendFile } from "fs";
-import path from "path/win32";
-import fs from 'fs';
-
 import {Checker} from "../logic/Checker";
 
 const bpmnRouter:Router = Router();

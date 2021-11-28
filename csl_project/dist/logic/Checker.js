@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Checker = void 0;
-const fetch = require('node-fetch'); //Need to use require explicitly
 const fast_xml_parser_1 = __importDefault(require("fast-xml-parser"));
 const util_1 = require("util");
 const exec = (0, util_1.promisify)(require('child_process').exec);
@@ -40,7 +39,8 @@ class Checker {
             }
             result.push({ name: sArray[i].substring(0, firstSpace), type: sArray[i].substring(secondSpace, thirdSpace - 2), desc: sArray[i].substring(thirdSpace) });
         }
-        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '');
+        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== ''); //Remove empty lines and last line 
+        result = result.map(x => ({ name: x.name, type: x.type, desc: x.desc.substring(0, x.desc.indexOf('   ')) })); //Remove the linter parameter label
         return result;
     }
     validateXML() {
@@ -52,6 +52,7 @@ class Checker {
     }
     async bpmnlint() {
         let x = null;
+        let result = null;
         try {
             x = await exec('node ./node_modules/bpmnlint/bin/bpmnlint.js ./uploads/diagram.bpmn');
         }
@@ -59,7 +60,8 @@ class Checker {
             let errorString = e.stdout.toString();
             x = errorString.substring(errorString.indexOf("diagram.bpmn") + "diagram.bpmn".length);
         }
-        return this.objectify(x);
+        result = x.includes("unparsable content") ? [{ name: "XSD Error", type: "error", desc: "The file is not a valid BPMN according to the XSD" }] : this.objectify(x);
+        return result;
     }
 }
 exports.Checker = Checker;
