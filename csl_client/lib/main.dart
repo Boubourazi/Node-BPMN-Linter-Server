@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool pending = false;
-  List<Widget> text = [Text("Drag here !")];
+  List<Widget> text = const [Text("Drag here !")];
 
   late DropzoneViewController controller;
   static const JsonDecoder parser = JsonDecoder();
@@ -83,8 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ))
                             .toList();
                       });
-                    } else {
-                      print(response.reasonPhrase);
                     }
                   },
                 );
