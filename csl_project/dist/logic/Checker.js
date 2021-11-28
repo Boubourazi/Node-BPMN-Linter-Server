@@ -60,7 +60,7 @@ class Checker {
             let errorString = e.stdout.toString();
             x = errorString.substring(errorString.indexOf("diagram.bpmn") + "diagram.bpmn".length);
         }
-        result = x.includes("unparsable content") ? [{ name: "XSD Error", type: "error", desc: "The file is not a valid BPMN according to the XSD" }] : this.objectify(x);
+        result = x.includes("unparsable content") ? [{ name: "XSD Error", type: "error", desc: "The file is not a valid BPMN against the XSD" }] : this.objectify(x);
         return result;
     }
 }
