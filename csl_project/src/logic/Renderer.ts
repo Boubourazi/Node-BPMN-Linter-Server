@@ -19,6 +19,7 @@ export class Renderer {
                 viewer.get('canvas').zoom('fit-viewport');
             })();
         `);
+        // TODO: check if folder exists
         await page.screenshot({ path: './screenshots/example.png' });
         console.log("screen done");
         //
@@ -27,18 +28,22 @@ export class Renderer {
         return null;
     }
 
-    private getErrors(lint:Lint):string[] {
+    private getErrors(lints:Lint[]):string[] {
         const errors:string[] = [];
-        if (lint.type === "error") {
-            errors.push(lint.desc);
+        for(const l of lints) {
+            if (l.type === "error") {
+                errors.push(l.name);
+            }
         }
         return errors;
     }
 
-    private getWarnings(lint:Lint):string[] {
+    private getWarnings(lints:Lint[]):string[] {
         const warnings:string[] = [];
-        if (lint.type === "warning") {
-            warnings.push(lint.desc);
+        for(const l of lints) {
+            if (l.type === "warning") {
+                warnings.push(l.name);
+            }
         }
         return warnings;
     }
