@@ -1,5 +1,6 @@
 import parser from 'fast-xml-parser';
 import { promisify } from 'util';
+import { Lint } from './Lint';
 const exec = promisify(require('child_process').exec);
 
 
@@ -7,9 +8,15 @@ export class Checker{
     constructor(private readonly bpmn:string){
     
     }
-
-    private objectify(lint:string):any{
-        let result:{name:string, type:string, desc:string}[] = [];
+    
+    
+    public get bpmnFile() : string {
+        return this.bpmn;
+    }
+    
+    
+    private objectify(lint:string):Lint[]{
+        let result:Lint[] = [];
         let s = lint;
 
         while(s.charAt(0) === '\n'){
@@ -39,12 +46,14 @@ export class Checker{
             result.push({name: sArray[i].substring(0, firstSpace), type:sArray[i].substring(secondSpace, thirdSpace-2), desc:sArray[i].substring(thirdSpace)});
             
         }
-        result = result.filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '');//Remove empty lines and last line 
-        result = result.map(x => ({name:x.name, type:x.type, desc:x.desc.substring(0, x.desc.indexOf('   '))}));//Remove the linter parameter label
+
+        result = result
+            .filter(x => (x.name !== '' && x.name !== '✖') && x.type !== '' && x.desc !== '') // Filter empty lines
+            .map(x => ({name:x.name, type:x.type, desc:x.desc.substring(0, x.desc.indexOf('   '))}));//Remove empty lines and last line 
         return result;
     }
 
-    validateXML():true|parser.ValidationError{
+    validateXML():true|parser.ValidationError{ 
         let valide = parser.validate(this.bpmn);
         return valide === true ? true : valide;
     }
@@ -52,7 +61,6 @@ export class Checker{
     validateFromShema():boolean{
         return true; // WIP
     }
-
 
     async bpmnlint():Promise<any>{
         let x:string = null;

@@ -1,10 +1,15 @@
 import { Router } from "express";
-import {Checker} from "../logic/Checker";
+import { Checker } from "../logic/Checker";
+import { Renderer } from "../logic/Renderer";
 
 const bpmnRouter:Router = Router();
 
 bpmnRouter.get("/", (req, res) => {
     res.send("bpmnfunction");
+});
+
+bpmnRouter.post('/checkwithimage', async (req, res) => { 
+    
 });
 
 bpmnRouter.post('/checkdiagram', async (req, res) => {
@@ -17,12 +22,12 @@ bpmnRouter.post('/checkdiagram', async (req, res) => {
         } else {
             let diagram:any = req.files.diagram;
             
-            console.log(diagram.name);
             diagram.mv('./uploads/' + "diagram.bpmn");
             let checker:Checker = new Checker(diagram.data.toString());
             let validation = checker.validateXML();
             let lint = await checker.bpmnlint();
-            console.log("lint : " + lint);
+            let renderer = new Renderer();
+            renderer.render(checker.bpmnFile);
             //send response
             res.send({
                 status: true,

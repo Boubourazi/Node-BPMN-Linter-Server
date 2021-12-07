@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm install && tsc",
     "start": "node dist/app.js",
     "dev": "concurrently \"nodemon dist/app.js\" \"tsc\"",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -32,11 +32,12 @@
   "dependencies": {
     "@types/bpmn-moddle": "^5.1.5",
     "@types/xsd-schema-validator": "^0.5.4",
-    "bpmn-js": "^8.8.1",
+    "bpmn-js": "^8.8.2",
     "bpmn-moddle": "^7.1.2",
     "bpmnlint": "^7.2.1",
     "fast-xml-parser": "^3.21.0",
     "node-fetch": "^2.6.5",
+    "puppeteer": "^12.0.1",
     "w3c-xml-validator": "^1.1.0",
     "xsd-schema-validator": "^0.7.0"
   }

@@ -90,9 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             pending
                 ? const Center(child: CircularProgressIndicator())
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                : ListView(
                     children: text,
                   )
           ],
