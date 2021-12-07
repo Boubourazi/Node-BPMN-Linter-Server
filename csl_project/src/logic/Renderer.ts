@@ -1,5 +1,6 @@
 import { getDefaultSettings } from 'http2';
 import puppeteer from 'puppeteer';
+import { Lint } from './Lint';
 //const BpmnJS = require('bpmn-js');
 
 export class Renderer {
@@ -7,7 +8,7 @@ export class Renderer {
         
     }
     
-    public async render(bpmn?: string, lint?:any):Promise<File> {
+    public async render(bpmn?: string, lint?:Lint):Promise<File> {
         const browser = await puppeteer.launch({headless: true});
         const page = await browser.newPage();
         await page.setContent(`<div id="canvas"></div>`);
@@ -24,5 +25,21 @@ export class Renderer {
         //await page.setContent(bpmn);
         await browser.close();
         return null;
+    }
+
+    private getErrors(lint:Lint):string[] {
+        const errors:string[] = [];
+        if (lint.type === "error") {
+            errors.push(lint.desc);
+        }
+        return errors;
+    }
+
+    private getWarnings(lint:Lint):string[] {
+        const warnings:string[] = [];
+        if (lint.type === "warning") {
+            warnings.push(lint.desc);
+        }
+        return warnings;
     }
 }
