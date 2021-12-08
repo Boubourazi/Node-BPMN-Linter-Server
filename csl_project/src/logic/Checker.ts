@@ -2,6 +2,7 @@ import parser from 'fast-xml-parser';
 import { promisify } from 'util';
 import { Lint } from './Lint';
 const exec = promisify(require('child_process').exec);
+import fs from 'fs/promises';
 
 
 export class Checker{
@@ -44,7 +45,6 @@ export class Checker{
                 thirdSpace++;
             }
             result.push({name: sArray[i].substring(0, firstSpace), type:sArray[i].substring(secondSpace, thirdSpace-2), desc:sArray[i].substring(thirdSpace)});
-            
         }
 
         result = result

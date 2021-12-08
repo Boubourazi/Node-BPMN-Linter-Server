@@ -1,6 +1,10 @@
 import { getDefaultSettings } from 'http2';
 import puppeteer from 'puppeteer';
 import { Lint } from './Lint';
+import fs from 'fs/promises';
+import { Stats } from 'fs';
+import { join } from 'path/posix';
+
 //const BpmnJS = require('bpmn-js');
 
 export class Renderer {
@@ -13,13 +17,14 @@ export class Renderer {
         const page = await browser.newPage();
         await page.setContent(`<div id="canvas"></div>`);
         await page.addScriptTag({url: 'https://unpkg.com/bpmn-js@8.8.3/dist/bpmn-viewer.development.js'});
-        const t = await page.evaluate(`(async () => {
+        const t = await page.evaluate(`
+            (async () => {
                 const viewer = new BpmnJS({container:'#canvas'});
                 await viewer.importXML(\`${bpmn.toString()}\`);
                 viewer.get('canvas').zoom('fit-viewport');
             })();
         `);
-        // TODO: check if folder exists
+        await fs.stat('screenshots').catch(() => fs.mkdir('screenshots'));
         await page.screenshot({ path: './screenshots/example.png' });
         console.log("screen done");
         //
@@ -29,22 +34,10 @@ export class Renderer {
     }
 
     private getErrors(lints:Lint[]):string[] {
-        const errors:string[] = [];
-        for(const l of lints) {
-            if (l.type === "error") {
-                errors.push(l.name);
-            }
-        }
-        return errors;
+        return lints.filter(lint => lint.type === "error").map(l => l.name);
     }
 
     private getWarnings(lints:Lint[]):string[] {
-        const warnings:string[] = [];
-        for(const l of lints) {
-            if (l.type === "warning") {
-                warnings.push(l.name);
-            }
-        }
-        return warnings;
+        return lints.filter(lint => lint.type === "warning").map(l => l.name);
     }
 }
